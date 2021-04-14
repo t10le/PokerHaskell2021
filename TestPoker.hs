@@ -34,6 +34,18 @@ testRoyalFlush2 =
             (deal [13, 27, 26, 38, 34, 47, 36, 37, 39])
         ]
 
+-- STRAIGHT FLUSH PATTERN TESTS --
+testStraightFlush =
+  TestLabel "StraightFlush: --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "StraightFlush: Player 1 should win."
+            ["2C", "3C", "4C", "5C", "6C"]
+            (deal [8, 9, 6, 7, 5, 4, 3, 2, 1])
+        ]
+
 -- HIGH RANK PATTERN TESTS --
 testHighRank =
   TestLabel "HighRank: --> Hand 1" $
@@ -133,6 +145,7 @@ main =
     TestList
       [ testRoyalFlush,
         testRoyalFlush2,
+        testStraightFlush,
         testHighRank,
         testHighRank2,
         testHighRank4,

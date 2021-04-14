@@ -37,6 +37,14 @@ kicker' x y z
   | x !! z > y !! z = x !! z
   | x !! z < y !! z = y !! z
 
+-- | Returns the winning list of tuples [(rank, suit)...(rank,suit)] during a tie or kicker scenario between two hands.
+kickerStraight x y = kickerStraight' x y 0
+
+kickerStraight' x y z
+  | x !! z == y !! z = kickerStraight' x y (z + 1)
+  | x !! z > y !! z = x
+  | x !! z < y !! z = y
+
 -- | Returns the occurrence of a target value from an array.
 countRecursion [] find = 0
 countRecursion (x : xs) find
@@ -64,7 +72,7 @@ findCommonSuit hand
 -- True
 containsRoyalFlush suit arr = ((10, suit) `elem` arr) && ((11, suit) `elem` arr) && ((12, suit) `elem` arr) && ((13, suit) `elem` arr) && ((1, suit) `elem` arr)
 
--- | Returns an array of tuples representing the royal flush combination if found for a player; otherwise returns an empty array.
+-- | Returns a list of tuples representing the royal flush sequence if found for a player; otherwise returns an empty array.
 --
 -- Prelude> ifRoyalFlush [(1,3),(3,3),(9,3),(10,3),(11,3),(12,3),(13,3)] [(2,3),(4,3),(9,3),(10,3),(11,3),(12,3),(13,3)]
 -- ["10S", "11S", "12S", "13S", "1S"]
@@ -76,7 +84,7 @@ ifRoyalFlush hand1 hand2
     player1Suit = findCommonSuit hand1
     player2Suit = findCommonSuit hand2
 
--- | Returns an array of only sequential (+1) ranks corresponding to the straight pattern.
+-- | Returns a list of only sequential (+1) ranks corresponding to the straight pattern.
 -- A helper function for ifStraightFlush
 containsStraight hand
   | case1 = [head rank, head rank -1, head rank -2, head rank -3, head rank -4]
@@ -89,7 +97,9 @@ containsStraight hand
     case2 = ((rank !! 1) `elem` rank) && ((rank !! 1) -1 `elem` rank) && ((rank !! 1) -2 `elem` rank) && ((rank !! 1) -3 `elem` rank) && ((rank !! 1) -4 `elem` rank)
     case3 = ((rank !! 2) `elem` rank) && ((rank !! 2) -1 `elem` rank) && ((rank !! 2) -2 `elem` rank) && ((rank !! 2) -3 `elem` rank) && ((rank !! 2) -4 `elem` rank)
 
+-- | Returns a list of tuples representing the straight flush sequence if found for a player; kicker function is implied; otherwise returns an empty array.
 ifStraightFlush hand1 hand2
+  | (hand1 `intersect` player1Cards /= []) && (hand2 `intersect` player2Cards /= []) = map interpretCard (reverse (kickerStraight player1Cards player2Cards))
   | hand1 `intersect` player1Cards /= [] = map interpretCard (reverse player1Cards)
   | hand2 `intersect` player2Cards /= [] = map interpretCard (reverse player2Cards)
   | otherwise = []
@@ -99,9 +109,7 @@ ifStraightFlush hand1 hand2
     player1Cards = zip (containsStraight hand1) (replicate 5 player1Suit)
     player2Cards = zip (containsStraight hand2) (replicate 5 player2Suit)
 
---   | (hand1 `intersect` player1Cards /= []) && (hand2 `intersect` player2Cards /= []) = kicker
-
--- | Returns an array of tuples representing the highest card for a player; kicker function is implied.
+-- | Returns a list of tuples representing the highest card for a player; kicker function is implied.
 isHighCard hand1 hand2
   | maximum hand1 == maximum hand2 = [interpretCard (kicker hand1 hand2)]
   | maximum hand1 > maximum hand2 = [interpretCard (maximum hand1)]

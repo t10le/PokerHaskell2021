@@ -84,18 +84,21 @@ ifRoyalFlush hand1 hand2
     player1Suit = findCommonSuit hand1
     player2Suit = findCommonSuit hand2
 
--- | Returns a list of only sequential (+1) ranks corresponding to the straight pattern.
+-- | Returns a list of only sequential (+1) ranks [1,2,3,4,5] corresponding to the straight pattern.
 -- A helper function for ifStraightFlush
 containsStraight hand
-  | case1 = [head rank, head rank -1, head rank -2, head rank -3, head rank -4]
-  | case2 = [rank !! 1, (rank !! 1) -1, (rank !! 1) -2, (rank !! 1) -3, (rank !! 1) -4]
-  | case3 = [rank !! 2, (rank !! 2) -1, (rank !! 2) -2, (rank !! 2) -3, (rank !! 2) -4]
+  | case1 && (fst (head hand) `elem` arr || fst (hand !! 1) `elem` arr) = arr
+  | case2 && (fst (head hand) `elem` brr || fst (hand !! 1) `elem` brr) = brr
+  | case3 && (fst (head hand) `elem` crr || fst (hand !! 1) `elem` crr) = crr
   | otherwise = []
   where
     rank = map fst (reverse (sort hand))
     case1 = (head rank `elem` rank) && (head rank -1 `elem` rank) && (head rank -2 `elem` rank) && (head rank -3 `elem` rank) && (head rank -4 `elem` rank)
     case2 = ((rank !! 1) `elem` rank) && ((rank !! 1) -1 `elem` rank) && ((rank !! 1) -2 `elem` rank) && ((rank !! 1) -3 `elem` rank) && ((rank !! 1) -4 `elem` rank)
     case3 = ((rank !! 2) `elem` rank) && ((rank !! 2) -1 `elem` rank) && ((rank !! 2) -2 `elem` rank) && ((rank !! 2) -3 `elem` rank) && ((rank !! 2) -4 `elem` rank)
+    arr = [head rank, head rank -1, head rank -2, head rank -3, head rank -4]
+    brr = [rank !! 1, (rank !! 1) -1, (rank !! 1) -2, (rank !! 1) -3, (rank !! 1) -4]
+    crr = [rank !! 2, (rank !! 2) -1, (rank !! 2) -2, (rank !! 2) -3, (rank !! 2) -4]
 
 -- | Returns a list of tuples representing the straight flush sequence if found for a player; kicker function is implied; otherwise returns an empty array.
 ifStraightFlush hand1 hand2
@@ -137,7 +140,7 @@ b x = map reduce ([x !! 1] ++ [x !! 3] ++ drop 4 x)
 {-
 
 STRAIGHTFLUSH
-x = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+x = [32, 17, 33, 18, 34, 35, 36, 37, 38]
 
 TESTING
 ghci -w simple_tester_haskell.hs

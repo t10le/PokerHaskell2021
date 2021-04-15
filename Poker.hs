@@ -85,7 +85,7 @@ ifRoyalFlush hand1 hand2
     player2Suit = findCommonSuit hand2
 
 -- | Returns a list of only sequential (+1) ranks [1,2,3,4,5] corresponding to the straight pattern.
--- A helper function for ifStraightFlush
+-- A helper function for ifStraightFlush.
 containsStraight hand
   | case1 && (fst (head hand) `elem` arr || fst (hand !! 1) `elem` arr) = arr
   | case2 && (fst (head hand) `elem` brr || fst (hand !! 1) `elem` brr) = brr
@@ -112,16 +112,19 @@ ifStraightFlush hand1 hand2
     player1Cards = zip (containsStraight hand1) (replicate 5 player1Suit)
     player2Cards = zip (containsStraight hand2) (replicate 5 player2Suit)
 
+-- | Returns the list of tuples representing the flush sequence.
+-- A helper function for ifFlush.
 containsFlush hand
   | length arr < 5 = []
   | (head hand `elem` arr || hand !! 1 `elem` arr) && length arr == 5 = arr
-  | head hand /= head arr && hand !! 1 /= head arr = tail arr
+  | head hand /= head arr && hand !! 1 /= head arr && length (tail arr) == 5 = tail arr
   | otherwise = []
   where
     playerSuit = findCommonSuit hand
     test x = snd x == playerSuit
     arr = reverse (sort (filter test hand))
 
+-- | Returns a list of tuples representing the flush sequence if found for a player; kicker function is implied; otherwise returns an empty array.
 ifFlush hand1 hand2
   | containsFlush hand1 /= [] && containsFlush hand2 /= [] = map interpretCard (reverse (kickerStraight (containsFlush hand1) (containsFlush hand2)))
   | containsFlush hand1 /= [] = map interpretCard (reverse (containsFlush hand1))

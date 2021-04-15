@@ -152,7 +152,19 @@ testFlush =
         [ assertEqual
             "Flush: Player 1 should win."
             ["2S", "4S", "5S", "6S", "9S"]
-            (deal [27, 45, 3, 48, 44, 43, 41, 33, 12])
+            (deal [27, 45, 3, 48, 44, 43, 41, 33, 12]),
+          assertEqual
+            "Flush: Player 1 should win."
+            ["1C", "4C", "6C", "7C", "10C"]
+            (deal [1, 16, 14, 17, 4, 6, 7, 10, 11]),
+          assertEqual
+            "Flush: Player 1 should win."
+            ["3D", "6D", "8D", "9D", "12D"]
+            (deal [16, 31, 29, 32, 19, 21, 22, 34, 25]),
+          assertEqual
+            "Flush: Player 1 should win."
+            ["3D", "6D", "8D", "9D", "13D"]
+            (deal [16, 31, 26, 32, 19, 21, 22, 34, 47])
         ]
 
 testFlush2 =
@@ -163,7 +175,41 @@ testFlush2 =
         [ assertEqual
             "Flush: Player 2 should win."
             ["2S", "4S", "5S", "6S", "9S"]
-            (deal [45, 27, 48, 3, 44, 43, 41, 33, 12])
+            (deal [45, 27, 48, 3, 44, 43, 41, 33, 12]),
+          assertEqual
+            "Flush: Player 2 should win."
+            ["1C", "4C", "6C", "7C", "10C"]
+            (deal [16, 1, 17, 14, 4, 6, 7, 10, 11]),
+          assertEqual
+            "Flush: Player 2 should win."
+            ["3D", "6D", "8D", "9D", "12D"]
+            (deal [31, 16, 32, 29, 19, 21, 22, 34, 25]),
+          assertEqual
+            "Flush: Player 2 should win."
+            ["3D", "6D", "8D", "9D", "13D"]
+            (deal [31, 16, 32, 26, 19, 21, 22, 34, 47])
+        ]
+
+testFlush3 =
+  TestLabel "Flush --> KICKER --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "Flush: (Kicker) Player 1 should win."
+            ["3D", "6D", "8D", "9D", "13D"]
+            (deal [16, 15, 26, 20, 19, 21, 22, 34, 47])
+        ]
+
+testFlush4 =
+  TestLabel "Flush --> KICKER --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "Flush: (Kicker) Player 2 should win."
+            ["3D", "6D", "8D", "9D", "13D"]
+            (deal [15, 16, 20, 26, 19, 21, 22, 34, 47])
         ]
 
 -- HIGH RANK PATTERN TESTS --
@@ -271,6 +317,8 @@ main =
         testStraightFlush4,
         testFlush,
         testFlush2,
+        testFlush3,
+        testFlush4,
         testHighRank,
         testHighRank2,
         testHighRank4,

@@ -212,6 +212,18 @@ testFlush4 =
             (deal [15, 16, 20, 26, 19, 21, 22, 34, 47])
         ]
 
+-- PAIR PATTERN TESTS--
+testPair =
+  TestLabel "Pair --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "Pair: Player 1 should win."
+            ["1H", "1S"]
+            (deal [40, 52, 46, 11, 48, 27, 29, 32, 37])
+        ]
+
 -- HIGH RANK PATTERN TESTS --
 testHighRank =
   TestLabel "HighRank --> Hand 1" $
@@ -319,6 +331,7 @@ main =
         testFlush2,
         testFlush3,
         testFlush4,
+        testPair,
         testHighRank,
         testHighRank2,
         testHighRank4,

@@ -45,7 +45,19 @@ kickerStraight' x y z
   | x !! z > y !! z = x
   | x !! z < y !! z = y
 
+kickerOther x y t u = kickerOther' (reverse (sort x)) (reverse (sort y)) t u 0
+
+kickerOther' x y t u z
+  | 1 `elem` map fst t = t
+  | 1 `elem` map fst u = u
+  | (fst (last y) == 1) && (fst (last x) /= 1) = u
+  | x !! z == y !! z = kickerOther' x y t u (z + 1)
+  | x !! z > y !! z = t
+  | x !! z < y !! z = u
+
 -- | Returns the occurrence of a target value from an array.
+-- The parameter, 'x', is a list; [1,2,3,...]
+-- The parameter, 'xs', is an integer.
 countRecursion [] find = 0
 countRecursion (x : xs) find
   | find == x = 1 + countRecursion xs find
@@ -131,6 +143,23 @@ ifFlush hand1 hand2
   | containsFlush hand2 /= [] = map interpretCard (reverse (containsFlush hand2))
   | otherwise = []
 
+evalPair hand
+  | pairValue /= [] = fst (head pairValue)
+  | otherwise = -1
+  where
+    test x = snd x == 2
+    pairValue = filter test (zip (map fst hand) [countRecursion (map fst hand) x | x <- nub (map fst hand)])
+
+-- | Returns a list of tupless representing the pair sequence if found for a player; kicker function is implied; otherwises returns an empty array.
+ifPair hand1 hand2
+  | any test2 hand1 && any test2' hand2 = map interpretCard (reverse (kickerOther hand1 hand2 (filter test2 hand1) (filter test2' hand2)))
+  | any test2 hand1 = map interpretCard (reverse (filter test2 hand1))
+  | any test2' hand2 = map interpretCard (reverse (filter test2' hand2))
+  | otherwise = []
+  where
+    test2 x = fst x == evalPair hand1
+    test2' x = fst x == evalPair hand2
+
 -- | Returns a list of tuples representing the highest card for a player; kicker function is implied.
 isHighCard hand1 hand2
   | maximum hand1 == maximum hand2 = [interpretCard (kicker hand1 hand2)]
@@ -146,6 +175,7 @@ deal x
   | ifRoyalFlush hand1 hand2 /= [] = ifRoyalFlush hand1 hand2
   | ifStraightFlush hand1 hand2 /= [] = ifStraightFlush hand1 hand2
   | ifFlush hand1 hand2 /= [] = ifFlush hand1 hand2
+  | ifPair hand1 hand2 /= [] = ifPair hand1 hand2
   | otherwise = isHighCard hand1 hand2
   where
     hand1 = map reduce ([head x] ++ [x !! 2] ++ drop 4 x)
@@ -160,7 +190,7 @@ b x = map reduce ([x !! 1] ++ [x !! 3] ++ drop 4 x)
 {-
 
 FLUSH
-x = [27, 45, 3, 48, 44, 43, 41, 33, 12]
+x = [40, 52, 46, 11, 48, 27, 29, 32, 37]
 
 TESTING
 ghci -w simple_tester_haskell.hs

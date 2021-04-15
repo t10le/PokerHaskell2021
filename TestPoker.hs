@@ -109,7 +109,11 @@ testStraightFlush3 =
           assertEqual
             "StraightFlush: (Kicker) Player 1 should win."
             ["6S", "7S", "8S", "9S", "10S"]
-            (deal [31, 27, 49, 43, 44, 45, 46, 47, 48])
+            (deal [31, 27, 49, 43, 44, 45, 46, 47, 48]),
+          assertEqual
+            "StraightFlush: (Kicker) Player 1 should win."
+            ["6C", "7C", "8C", "9C", "10C"]
+            (deal [21, 20, 22, 19, 6, 7, 8, 9, 10])
         ]
 
 testStraightFlush4 =
@@ -140,7 +144,11 @@ testStraightFlush4 =
           assertEqual
             "StraightFlush: (Kicker) Player 2 should win."
             ["6S", "7S", "8S", "9S", "10S"]
-            (deal [27, 31, 43, 49, 44, 45, 46, 47, 48])
+            (deal [27, 31, 43, 49, 44, 45, 46, 47, 48]),
+          assertEqual
+            "StraightFlush: (Kicker) Player 1 should win."
+            ["6C", "7C", "8C", "9C", "10C"]
+            (deal [20, 21, 19, 22, 6, 7, 8, 9, 10])
         ]
 
 -- FLUSH PATTERN TESTS --
@@ -271,7 +279,11 @@ testTwoPair3 =
           assertEqual
             "TwoPair: (Kicker) Player 1 should win."
             ["1C", "1H", "8D", "8S"]
-            (deal [1, 32, 21, 34, 27, 15, 43, 6, 47])
+            (deal [1, 32, 21, 34, 27, 15, 43, 6, 47]),
+          assertEqual
+            "TwoPair: (Kicker) Player 1 should win."
+            ["1C", "1D", "7C", "7D"]
+            (deal [14, 18, 20, 26, 1, 5, 7, 9, 13])
         ]
 
 testTwoPair4 =

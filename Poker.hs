@@ -41,6 +41,7 @@ kicker' x y z
 kickerStraight x y = kickerStraight' x y 0
 
 kickerStraight' x y z
+  | x == y = x
   | x !! z == y !! z = kickerStraight' x y (z + 1)
   | x !! z > y !! z = x
   | x !! z < y !! z = y

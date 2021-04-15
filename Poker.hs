@@ -143,7 +143,7 @@ ifFlush hand1 hand2
   | containsFlush hand2 /= [] = map interpretCard (reverse (containsFlush hand2))
   | otherwise = []
 
-evalPair hand
+evalPairVal hand
   | pairValue /= [] = fst (head pairValue)
   | otherwise = -1
   where
@@ -152,13 +152,13 @@ evalPair hand
 
 -- | Returns a list of tupless representing the pair sequence if found for a player; kicker function is implied; otherwises returns an empty array.
 ifPair hand1 hand2
-  | any test2 hand1 && any test2' hand2 = map interpretCard (reverse (kickerOther hand1 hand2 (filter test2 hand1) (filter test2' hand2)))
-  | any test2 hand1 = map interpretCard (reverse (filter test2 hand1))
-  | any test2' hand2 = map interpretCard (reverse (filter test2' hand2))
+  | any test2 hand1 && any test2' hand2 = map interpretCard (sort (kickerOther hand1 hand2 (filter test2 hand1) (filter test2' hand2)))
+  | any test2 hand1 = map interpretCard (filter test2 hand1)
+  | any test2' hand2 = map interpretCard (filter test2' hand2)
   | otherwise = []
   where
-    test2 x = fst x == evalPair hand1
-    test2' x = fst x == evalPair hand2
+    test2 x = fst x == evalPairVal hand1
+    test2' x = fst x == evalPairVal hand2
 
 -- | Returns a list of tuples representing the highest card for a player; kicker function is implied.
 isHighCard hand1 hand2

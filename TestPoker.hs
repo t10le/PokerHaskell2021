@@ -220,8 +220,57 @@ testPair =
         TestCase
         [ assertEqual
             "Pair: Player 1 should win."
+            ["3C", "3D"]
+            (deal [3, 1, 16, 2, 7, 8, 20, 33, 46])
+        ]
+
+testPair2 =
+  TestLabel "Pair --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "Pair: Player 2 should win."
+            ["3C", "3D"]
+            (deal [1, 3, 2, 16, 7, 8, 20, 33, 46])
+        ]
+
+testPair3 =
+  TestLabel "Pair --> KICKER --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "Pair: (Kicker) Player 1 should win."
             ["1H", "1S"]
-            (deal [40, 52, 46, 11, 48, 27, 29, 32, 37])
+            (deal [40, 52, 46, 11, 48, 27, 29, 32, 37]),
+          assertEqual
+            "Pair: (Kicker) Player 1 should win."
+            ["13C", "13S"]
+            (deal [13, 25, 8, 20, 40, 2, 16, 52, 51]),
+          assertEqual
+            "Pair: (Kicker) Player 1 should win."
+            ["1C", "1D"]
+            (deal [1, 2, 14, 15, 5, 18, 31, 44, 6])
+        ]
+
+testPair4 =
+  TestLabel "Pair --> KICKER --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "Pair: (Kicker) Player 2 should win."
+            ["1H", "1S"]
+            (deal [52, 40, 11, 46, 48, 27, 29, 32, 37]),
+          assertEqual
+            "Pair: (Kicker) Player 2 should win."
+            ["13C", "13S"]
+            (deal [25, 13, 20, 8, 40, 2, 16, 52, 51]),
+          assertEqual
+            "Pair: (Kicker) Player 2 should win."
+            ["1C", "1D"]
+            (deal [2, 1, 15, 14, 5, 18, 31, 44, 6])
         ]
 
 -- HIGH RANK PATTERN TESTS --
@@ -332,6 +381,9 @@ main =
         testFlush3,
         testFlush4,
         testPair,
+        testPair2,
+        testPair3,
+        testPair4,
         testHighRank,
         testHighRank2,
         testHighRank4,

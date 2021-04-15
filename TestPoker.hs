@@ -143,6 +143,29 @@ testStraightFlush4 =
             (deal [27, 31, 43, 49, 44, 45, 46, 47, 48])
         ]
 
+-- FLUSH PATTERN TESTS --
+testFlush =
+  TestLabel "Flush --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "Flush: Player 1 should win."
+            ["2S", "4S", "5S", "6S", "9S"]
+            (deal [27, 45, 3, 48, 44, 43, 41, 33, 12])
+        ]
+
+testFlush2 =
+  TestLabel "Flush --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "Flush: Player 2 should win."
+            ["2S", "4S", "5S", "6S", "9S"]
+            (deal [45, 27, 48, 3, 44, 43, 41, 33, 12])
+        ]
+
 -- HIGH RANK PATTERN TESTS --
 testHighRank =
   TestLabel "HighRank --> Hand 1" $
@@ -246,6 +269,8 @@ main =
         testStraightFlush2,
         testStraightFlush3,
         testStraightFlush4,
+        testFlush,
+        testFlush2,
         testHighRank,
         testHighRank2,
         testHighRank4,

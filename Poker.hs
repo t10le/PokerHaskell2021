@@ -112,6 +112,22 @@ ifStraightFlush hand1 hand2
     player1Cards = zip (containsStraight hand1) (replicate 5 player1Suit)
     player2Cards = zip (containsStraight hand2) (replicate 5 player2Suit)
 
+containsFlush hand
+  | length arr < 5 = []
+  | (head hand `elem` arr || hand !! 1 `elem` arr) && length arr == 5 = arr
+  | head hand /= head arr && hand !! 1 /= head arr = tail arr
+  | otherwise = []
+  where
+    playerSuit = findCommonSuit hand
+    test x = snd x == playerSuit
+    arr = reverse (sort (filter test hand))
+
+ifFlush hand1 hand2
+  | containsFlush hand1 /= [] && containsFlush hand2 /= [] = map interpretCard (reverse (kickerStraight (containsFlush hand1) (containsFlush hand2)))
+  | containsFlush hand1 /= [] = map interpretCard (reverse (containsFlush hand1))
+  | containsFlush hand2 /= [] = map interpretCard (reverse (containsFlush hand2))
+  | otherwise = []
+
 -- | Returns a list of tuples representing the highest card for a player; kicker function is implied.
 isHighCard hand1 hand2
   | maximum hand1 == maximum hand2 = [interpretCard (kicker hand1 hand2)]
@@ -126,6 +142,7 @@ isHighCard hand1 hand2
 deal x
   | ifRoyalFlush hand1 hand2 /= [] = ifRoyalFlush hand1 hand2
   | ifStraightFlush hand1 hand2 /= [] = ifStraightFlush hand1 hand2
+  | ifFlush hand1 hand2 /= [] = ifFlush hand1 hand2
   | otherwise = isHighCard hand1 hand2
   where
     hand1 = map reduce ([head x] ++ [x !! 2] ++ drop 4 x)
@@ -139,8 +156,8 @@ b x = map reduce ([x !! 1] ++ [x !! 3] ++ drop 4 x)
 
 {-
 
-STRAIGHTFLUSH
-x = [32, 17, 33, 18, 34, 35, 36, 37, 38]
+FLUSH
+x = [27, 45, 3, 48, 44, 43, 41, 33, 12]
 
 TESTING
 ghci -w simple_tester_haskell.hs

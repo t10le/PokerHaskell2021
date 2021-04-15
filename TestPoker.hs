@@ -220,7 +220,68 @@ testFlush4 =
             (deal [15, 16, 20, 26, 19, 21, 22, 34, 47])
         ]
 
--- TWOPAIR PATTERN TESTS --
+-- THREE OF KIND PATTERN TESTS --
+testThreeOfKind =
+  TestLabel "ThreeOfKind --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "ThreeOfKind: Player 1 should win."
+            ["4D", "4H", "4S"]
+            (deal [17, 31, 30, 51, 44, 43, 41, 33, 12]),
+          assertEqual
+            "ThreeOfKind: Player 1 should win."
+            ["1C", "1D", "1S"]
+            (deal [2, 1, 13, 40, 14, 15, 16, 17, 52]),
+          assertEqual
+            "ThreeOfKind: Player 1 should win."
+            ["5D", "5H", "5S"]
+            (deal [2, 18, 13, 31, 44, 15, 16, 17, 52])
+        ]
+
+testThreeOfKind2 =
+  TestLabel "ThreeOfKind --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "ThreeOfKind: Player 2 should win."
+            ["4D", "4H", "4S"]
+            (deal [31, 17, 51, 30, 44, 43, 41, 33, 12]),
+          assertEqual
+            "ThreeOfKind: Player 2 should win."
+            ["1C", "1D", "1S"]
+            (deal [1, 2, 40, 13, 14, 15, 16, 17, 52]),
+          assertEqual
+            "ThreeOfKind: Player 2 should win."
+            ["5D", "5H", "5S"]
+            (deal [18, 2, 31, 13, 44, 15, 16, 17, 52])
+        ]
+
+testThreeOfKind3 =
+  TestLabel "ThreeOfKind --> Kicker--> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "ThreeOfKind: (Kicker) Player 1 should win."
+            ["1C", "1D", "1S"]
+            (deal [1, 2, 40, 28, 14, 15, 16, 17, 52])
+        ]
+
+testThreeOfKind4 =
+  TestLabel "ThreeOfKind --> Kicker--> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "ThreeOfKind: (Kicker) Player 2 should win."
+            ["1C", "1D", "1S"]
+            (deal [2, 1, 28, 40, 14, 15, 16, 17, 52])
+        ]
+
+-- TWO PAIR PATTERN TESTS --
 testTwoPair =
   TestLabel "TwoPair --> Hand 1" $
     TestList $
@@ -477,6 +538,10 @@ main =
         testFlush2,
         testFlush3,
         testFlush4,
+        testThreeOfKind,
+        testThreeOfKind2,
+        testThreeOfKind3,
+        testThreeOfKind4,
         testTwoPair,
         testTwoPair2,
         testTwoPair3,

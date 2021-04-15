@@ -144,6 +144,22 @@ ifFlush hand1 hand2
   | containsFlush hand2 /= [] = map interpretCard (reverse (containsFlush hand2))
   | otherwise = []
 
+evalThreePairVal hand
+  | pairValue /= [] && snd (head pairValue) == 3 = [fst (head pairValue)]
+  | otherwise = [-1]
+  where
+    test x = snd x == 3
+    pairValue = nub (filter test (zip (map fst hand) [countRecursion (map fst hand) x | x <- map fst hand]))
+
+ifThreeOfKind hand1 hand2
+  | (any test2 hand1 && length (evalTwoPairVal hand1) == 1) && (any test2' hand2 && length (evalTwoPairVal hand2) == 1) = map interpretCard (sort (kickerOther hand1 hand2 (filter test2 hand1) (filter test2' hand2)))
+  | any test2 hand1 && length (evalTwoPairVal hand1) == 1 = map interpretCard (sort (filter test2 hand1))
+  | any test2' hand2 && length (evalTwoPairVal hand2) == 1 = map interpretCard (sort (filter test2' hand2))
+  | otherwise = []
+  where
+    test2 x = fst x == head (evalThreePairVal hand1)
+    test2' x = fst x == head (evalThreePairVal hand2)
+
 evalTwoPairVal hand
   | pairValue /= [] = nub [fst (head pairValue), fst (last pairValue)]
   | otherwise = [-1]
@@ -193,6 +209,7 @@ deal x
   | ifRoyalFlush hand1 hand2 /= [] = ifRoyalFlush hand1 hand2
   | ifStraightFlush hand1 hand2 /= [] = ifStraightFlush hand1 hand2
   | ifFlush hand1 hand2 /= [] = ifFlush hand1 hand2
+  | ifThreeOfKind hand1 hand2 /= [] = ifThreeOfKind hand1 hand2
   | ifTwoPair hand1 hand2 /= [] = ifTwoPair hand1 hand2
   | ifPair hand1 hand2 /= [] = ifPair hand1 hand2
   | otherwise = isHighCard hand1 hand2
@@ -207,9 +224,8 @@ a x = map reduce ([head x] ++ [x !! 2] ++ drop 4 x)
 b x = map reduce ([x !! 1] ++ [x !! 3] ++ drop 4 x)
 
 {-
-
-TWOPAIRS
-x = [50, 26, 39, 3, 11, 27, 20, 48, 52]
+THREEPAIR
+x = [17, 31, 30, 51, 44, 43, 41, 33, 12]
 
 TESTING
 ghci -w simple_tester_haskell.hs

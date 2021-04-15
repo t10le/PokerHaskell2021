@@ -212,7 +212,92 @@ testFlush4 =
             (deal [15, 16, 20, 26, 19, 21, 22, 34, 47])
         ]
 
--- PAIR PATTERN TESTS--
+-- TWOPAIR PATTERN TESTS --
+testTwoPair =
+  TestLabel "TwoPair --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "TwoPair: Player 1 should win."
+            ["11C", "11S", "13H", "13S"]
+            (deal [50, 26, 39, 3, 11, 27, 20, 48, 52]),
+          assertEqual
+            "TwoPair: Player 1 should win."
+            ["1C", "1D", "8D", "8H"]
+            (deal [1, 13, 14, 26, 18, 6, 7, 21, 34]),
+          assertEqual
+            "TwoPair: Player 1 should win."
+            ["8D", "8H", "13C", "13D"]
+            (deal [2, 13, 15, 26, 18, 6, 7, 21, 34])
+        ]
+
+testTwoPair2 =
+  TestLabel "TwoPair --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "TwoPair: Player 2 should win."
+            ["11C", "11S", "13H", "13S"]
+            (deal [26, 50, 3, 39, 11, 27, 20, 48, 52]),
+          assertEqual
+            "TwoPair: Player 1 should win."
+            ["1C", "1D", "8D", "8H"]
+            (deal [13, 1, 26, 14, 18, 6, 7, 21, 34]),
+          assertEqual
+            "TwoPair: Player 1 should win."
+            ["8D", "8H", "13C", "13D"]
+            (deal [13, 2, 26, 15, 18, 6, 7, 21, 34])
+        ]
+
+testTwoPair3 =
+  TestLabel "TwoPair --> KICKER --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "TwoPair: (Kicker) Player 1 should win."
+            ["11C", "11S", "13H", "13S"]
+            (deal [50, 6, 39, 26, 32, 20, 48, 11, 52]),
+          assertEqual
+            "TwoPair: (Kicker) Player 1 should win."
+            ["10C", "10S", "12H", "12S"]
+            (deal [49, 5, 38, 25, 31, 19, 47, 10, 51]),
+          assertEqual
+            "TwoPair: (Kicker) Player 1 should win."
+            ["8C", "8H", "10H", "10S"]
+            (deal [34, 3, 36, 23, 29, 17, 45, 8, 49]),
+          assertEqual
+            "TwoPair: (Kicker) Player 1 should win."
+            ["1C", "1H", "8D", "8S"]
+            (deal [1, 32, 21, 34, 27, 15, 43, 6, 47])
+        ]
+
+testTwoPair4 =
+  TestLabel "TwoPair --> KICKER --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "TwoPair: (Kicker) Player 2 should win."
+            ["11C", "11S", "13H", "13S"]
+            (deal [6, 50, 26, 39, 32, 20, 48, 11, 52]),
+          assertEqual
+            "TwoPair: (Kicker) Player 1 should win."
+            ["10C", "10S", "12H", "12S"]
+            (deal [5, 49, 25, 38, 31, 19, 47, 10, 51]),
+          assertEqual
+            "TwoPair: (Kicker) Player 1 should win."
+            ["8C", "8H", "10H", "10S"]
+            (deal [3, 34, 23, 36, 29, 17, 45, 8, 49]),
+          assertEqual
+            "TwoPair: (Kicker) Player 1 should win."
+            ["1C", "1H", "8D", "8S"]
+            (deal [32, 1, 34, 21, 27, 15, 43, 6, 47])
+        ]
+
+-- PAIR PATTERN TESTS --
 testPair =
   TestLabel "Pair --> Hand 1" $
     TestList $
@@ -380,6 +465,10 @@ main =
         testFlush2,
         testFlush3,
         testFlush4,
+        testTwoPair,
+        testTwoPair2,
+        testTwoPair3,
+        testTwoPair4,
         testPair,
         testPair2,
         testPair3,

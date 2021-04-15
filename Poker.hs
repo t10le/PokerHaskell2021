@@ -143,6 +143,23 @@ ifFlush hand1 hand2
   | containsFlush hand2 /= [] = map interpretCard (reverse (containsFlush hand2))
   | otherwise = []
 
+evalTwoPairVal hand
+  | pairValue /= [] = nub [fst (head pairValue), fst (last pairValue)]
+  | otherwise = [-1]
+  where
+    test x = snd x == 2
+    pairValue = nub (filter test (zip (map fst hand) [countRecursion (map fst hand) x | x <- map fst hand]))
+
+-- | Returns a list of tuples representing the two pair sequence if found for a player; kicker function is implied; otherwise returns an empty array.
+ifTwoPair hand1 hand2
+  | (any test2 hand1 && length (evalTwoPairVal hand1) == 2) && (any test2' hand2 && length (evalTwoPairVal hand2) == 2) = map interpretCard (sort (kickerOther hand1 hand2 (filter test2 hand1) (filter test2' hand2)))
+  | any test2 hand1 && length (evalTwoPairVal hand1) == 2 = map interpretCard (sort (filter test2 hand1))
+  | any test2' hand2 && length (evalTwoPairVal hand2) == 2 = map interpretCard (sort (filter test2' hand2))
+  | otherwise = []
+  where
+    test2 x = fst x == head (evalTwoPairVal hand1) || fst x == last (evalTwoPairVal hand1)
+    test2' x = fst x == head (evalTwoPairVal hand2) || fst x == last (evalTwoPairVal hand2)
+
 evalPairVal hand
   | pairValue /= [] = fst (head pairValue)
   | otherwise = -1
@@ -175,6 +192,7 @@ deal x
   | ifRoyalFlush hand1 hand2 /= [] = ifRoyalFlush hand1 hand2
   | ifStraightFlush hand1 hand2 /= [] = ifStraightFlush hand1 hand2
   | ifFlush hand1 hand2 /= [] = ifFlush hand1 hand2
+  | ifTwoPair hand1 hand2 /= [] = ifTwoPair hand1 hand2
   | ifPair hand1 hand2 /= [] = ifPair hand1 hand2
   | otherwise = isHighCard hand1 hand2
   where
@@ -189,8 +207,8 @@ b x = map reduce ([x !! 1] ++ [x !! 3] ++ drop 4 x)
 
 {-
 
-FLUSH
-x = [40, 52, 46, 11, 48, 27, 29, 32, 37]
+TWOPAIRS
+x = [50, 26, 39, 3, 11, 27, 20, 48, 52]
 
 TESTING
 ghci -w simple_tester_haskell.hs

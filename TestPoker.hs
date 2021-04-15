@@ -151,6 +151,59 @@ testStraightFlush4 =
             (deal [20, 21, 19, 22, 6, 7, 8, 9, 10])
         ]
 
+-- FOUR OF KIND PATTERN TESTS --
+testFourOfKind =
+  TestLabel "FourOfKind --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "FourOfKind: Player 1 should win."
+            ["1C", "1D", "1H", "1S"]
+            (deal [40, 41, 27, 28, 1, 14, 15, 42, 29])
+        ]
+
+testFourOfKind2 =
+  TestLabel "FourOfKind --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "FourOfKind: Player 2 should win."
+            ["1C", "1D", "1H", "1S"]
+            (deal [41, 40, 28, 27, 1, 14, 15, 42, 29])
+        ]
+
+testFourOfKind3 =
+  TestLabel "FourOfKind --> KICKER --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "HighRank: (Kicker) Player 1 should win."
+            ["8C", "8D", "8H", "8S"]
+            (deal [17, 3, 5, 4, 8, 9, 21, 34, 47]),
+          assertEqual
+            "HighRank: (Kicker) Player 1 should win."
+            ["7C", "7D", "7H", "7S"]
+            (deal [1, 2, 4, 14, 7, 20, 33, 46, 8])
+        ]
+
+testFourOfKind4 =
+  TestLabel "FourOfKind --> KICKER --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "HighRank: (Kicker) Player 2 should win."
+            ["8C", "8D", "8H", "8S"]
+            (deal [3, 17, 4, 5, 8, 9, 21, 34, 47]),
+          assertEqual
+            "HighRank: (Kicker) Player 2 should win."
+            ["7C", "7D", "7H", "7S"]
+            (deal [2, 1, 14, 4, 7, 20, 33, 46, 8])
+        ]
+
 -- FLUSH PATTERN TESTS --
 testFlush =
   TestLabel "Flush --> Hand 1" $
@@ -172,7 +225,11 @@ testFlush =
           assertEqual
             "Flush: Player 1 should win."
             ["3D", "6D", "8D", "9D", "13D"]
-            (deal [16, 31, 26, 32, 19, 21, 22, 34, 47])
+            (deal [16, 31, 26, 32, 19, 21, 22, 34, 47]),
+          assertEqual
+            "Flush: Player 1 should win."
+            ["1C", "6C", "8C", "9C", "10C"]
+            (deal [1, 3, 14, 4, 6, 19, 8, 9, 10])
         ]
 
 testFlush2 =
@@ -195,7 +252,11 @@ testFlush2 =
           assertEqual
             "Flush: Player 2 should win."
             ["3D", "6D", "8D", "9D", "13D"]
-            (deal [31, 16, 32, 26, 19, 21, 22, 34, 47])
+            (deal [31, 16, 32, 26, 19, 21, 22, 34, 47]),
+          assertEqual
+            "Flush: Player 2 should win."
+            ["1C", "6C", "8C", "9C", "10C"]
+            (deal [3, 1, 4, 14, 6, 19, 8, 9, 10])
         ]
 
 testFlush3 =
@@ -267,7 +328,11 @@ testThreeOfKind3 =
         [ assertEqual
             "ThreeOfKind: (Kicker) Player 1 should win."
             ["1C", "1D", "1S"]
-            (deal [1, 2, 40, 28, 14, 15, 16, 17, 52])
+            (deal [1, 2, 40, 28, 14, 15, 16, 17, 52]),
+          assertEqual
+            "ThreeOfKind: (Kicker) Player 2 should win."
+            ["4D", "4H", "4S"]
+            (deal [13, 30, 44, 27, 12, 17, 33, 41, 43])
         ]
 
 testThreeOfKind4 =
@@ -278,7 +343,11 @@ testThreeOfKind4 =
         [ assertEqual
             "ThreeOfKind: (Kicker) Player 2 should win."
             ["1C", "1D", "1S"]
-            (deal [2, 1, 28, 40, 14, 15, 16, 17, 52])
+            (deal [2, 1, 28, 40, 14, 15, 16, 17, 52]),
+          assertEqual
+            "ThreeOfKind: (Kicker) Player 2 should win."
+            ["4D", "4H", "4S"]
+            (deal [30, 13, 27, 44, 12, 17, 33, 41, 43])
         ]
 
 -- TWO PAIR PATTERN TESTS --
@@ -378,8 +447,8 @@ testPair =
         TestCase
         [ assertEqual
             "Pair: Player 1 should win."
-            ["3C", "3D"]
-            (deal [3, 1, 16, 2, 7, 8, 20, 33, 46])
+            ["13C", "13S"]
+            (deal [13, 25, 8, 20, 40, 2, 16, 52, 51])
         ]
 
 testPair2 =
@@ -389,8 +458,8 @@ testPair2 =
         TestCase
         [ assertEqual
             "Pair: Player 2 should win."
-            ["3C", "3D"]
-            (deal [1, 3, 2, 16, 7, 8, 20, 33, 46])
+            ["13C", "13S"]
+            (deal [25, 13, 20, 8, 40, 2, 16, 52, 51])
         ]
 
 testPair3 =
@@ -401,15 +470,7 @@ testPair3 =
         [ assertEqual
             "Pair: (Kicker) Player 1 should win."
             ["1H", "1S"]
-            (deal [40, 52, 46, 11, 48, 27, 29, 32, 37]),
-          assertEqual
-            "Pair: (Kicker) Player 1 should win."
-            ["13C", "13S"]
-            (deal [13, 25, 8, 20, 40, 2, 16, 52, 51]),
-          assertEqual
-            "Pair: (Kicker) Player 1 should win."
-            ["1C", "1D"]
-            (deal [1, 2, 14, 15, 5, 18, 31, 44, 6])
+            (deal [40, 52, 46, 11, 48, 27, 29, 32, 37])
         ]
 
 testPair4 =
@@ -420,15 +481,7 @@ testPair4 =
         [ assertEqual
             "Pair: (Kicker) Player 2 should win."
             ["1H", "1S"]
-            (deal [52, 40, 11, 46, 48, 27, 29, 32, 37]),
-          assertEqual
-            "Pair: (Kicker) Player 2 should win."
-            ["13C", "13S"]
-            (deal [25, 13, 20, 8, 40, 2, 16, 52, 51]),
-          assertEqual
-            "Pair: (Kicker) Player 2 should win."
-            ["1C", "1D"]
-            (deal [2, 1, 15, 14, 5, 18, 31, 44, 6])
+            (deal [52, 40, 11, 46, 48, 27, 29, 32, 37])
         ]
 
 -- HIGH RANK PATTERN TESTS --
@@ -439,28 +492,16 @@ testHighRank =
         TestCase
         [ assertEqual
             "HighRank: Player 1 should win."
-            ["1C"]
-            (deal [1, 3, 4, 2, 7, 20, 33, 46, 8]),
-          assertEqual
-            "HighRank: Player 1 should win"
-            ["5C"]
-            (deal [2, 3, 5, 4, 8, 21, 34, 47, 9]),
-          assertEqual
-            "HighRank: Player 1 should win."
-            ["1D"]
-            (deal [14, 3, 4, 2, 7, 20, 33, 46, 8]),
-          assertEqual
-            "HighRank: Player 1 should win."
-            ["1H"]
-            (deal [27, 3, 4, 2, 7, 20, 33, 46, 8]),
-          assertEqual
-            "HighRank: Player 1 should win."
             ["1S"]
-            (deal [40, 3, 4, 2, 7, 20, 33, 46, 8]),
+            (deal [40, 2, 3, 50, 20, 8, 9, 12, 26]),
           assertEqual
             "HighRank: Player 1 should win."
-            ["13H"]
-            (deal [2, 3, 39, 4, 8, 21, 34, 47, 9])
+            ["10S"]
+            (deal [41, 3, 4, 49, 19, 7, 8, 11, 25]),
+          assertEqual
+            "HighRank: Player 1 should win."
+            ["11S"]
+            (deal [42, 4, 5, 50, 20, 8, 9, 12, 26])
         ]
 
 testHighRank2 =
@@ -470,58 +511,16 @@ testHighRank2 =
         TestCase
         [ assertEqual
             "HighRank: Player 2 should win."
-            ["1C"]
-            (deal [3, 1, 2, 4, 7, 20, 33, 46, 8]),
-          assertEqual
-            "HighRank: Player 2 should win"
-            ["5C"]
-            (deal [3, 2, 4, 5, 8, 21, 34, 47, 9]),
-          assertEqual
-            "HighRank: Player 2 should win."
-            ["1D"]
-            (deal [3, 14, 2, 4, 7, 20, 33, 46, 8]),
-          assertEqual
-            "HighRank: Player 2 should win."
-            ["1H"]
-            (deal [3, 27, 2, 4, 7, 20, 33, 46, 8]),
-          assertEqual
-            "HighRank: Player 2 should win."
             ["1S"]
-            (deal [3, 40, 2, 4, 7, 20, 33, 46, 8]),
+            (deal [2, 40, 50, 3, 20, 8, 9, 12, 26]),
           assertEqual
-            "HighRank: Player 2 should win"
-            ["13H"]
-            (deal [3, 2, 4, 39, 8, 21, 34, 47, 9])
-        ]
-
-testHighRank3 =
-  TestLabel "HighRank --> KICKER --> Hand 1" $
-    TestList $
-      fmap
-        TestCase
-        [ assertEqual
-            "HighRank: (Kicker) Player 1 should win."
-            ["4C"]
-            (deal [1, 2, 4, 14, 7, 20, 33, 46, 8]),
+            "HighRank: Player 1 should win."
+            ["10S"]
+            (deal [3, 41, 49, 4, 19, 7, 8, 11, 25]),
           assertEqual
-            "HighRank: (Kicker) Player 1 should win."
-            ["5C"]
-            (deal [17, 3, 5, 4, 8, 9, 21, 34, 47])
-        ]
-
-testHighRank4 =
-  TestLabel "HighRank --> KICKER --> Hand 2" $
-    TestList $
-      fmap
-        TestCase
-        [ assertEqual
-            "HighRank: (Kicker) Player 2 should win."
-            ["4C"]
-            (deal [2, 1, 14, 4, 7, 20, 33, 46, 8]),
-          assertEqual
-            "HighRank: (Kicker) Player 2 should win."
-            ["5C"]
-            (deal [3, 17, 4, 5, 8, 9, 21, 34, 47])
+            "HighRank: Player 1 should win."
+            ["11S"]
+            (deal [4, 42, 50, 5, 20, 8, 9, 12, 26])
         ]
 
 main :: IO Counts
@@ -534,6 +533,10 @@ main =
         testStraightFlush2,
         testStraightFlush3,
         testStraightFlush4,
+        testFourOfKind,
+        testFourOfKind2,
+        testFourOfKind3,
+        testFourOfKind4,
         testFlush,
         testFlush2,
         testFlush3,
@@ -551,7 +554,5 @@ main =
         testPair3,
         testPair4,
         testHighRank,
-        testHighRank2,
-        testHighRank4,
-        testHighRank4
+        testHighRank2
       ]

@@ -125,6 +125,43 @@ ifStraightFlush hand1 hand2
     player1Cards = zip (containsStraight hand1) (replicate 5 player1Suit)
     player2Cards = zip (containsStraight hand2) (replicate 5 player2Suit)
 
+evalFourPairVal hand
+  | pairValue /= [] && snd (head pairValue) == 4 = [fst (head pairValue)]
+  | otherwise = [-1]
+  where
+    test x = snd x == 4
+    pairValue = nub (filter test (zip (map fst hand) [countRecursion (map fst hand) x | x <- map fst hand]))
+
+-- | Returns a list of tuples representing the four pair sequence if found for a player; kicker function is implied; otherwise returns an empty array.
+ifFourOfKind hand1 hand2
+  | (any test2 hand1 && length (evalFourPairVal hand1) == 1) && (any test2' hand2 && length (evalFourPairVal hand2) == 1) = map interpretCard (sort (kickerOther hand1 hand2 (filter test2 hand1) (filter test2' hand2)))
+  | any test2 hand1 && length (evalFourPairVal hand1) == 1 = map interpretCard (sort (filter test2 hand1))
+  | any test2' hand2 && length (evalFourPairVal hand2) == 1 = map interpretCard (sort (filter test2' hand2))
+  | otherwise = []
+  where
+    test2 x = fst x == head (evalFourPairVal hand1)
+    test2' x = fst x == head (evalFourPairVal hand2)
+
+evalFullHouseVal hand
+  | pairValue /= [] && check = [fst (head pairValue), fst (last pairValue)]
+  | otherwise = [-1]
+  where
+    test x = snd x == 3 || snd x == 2
+    test' x = snd x == 3
+    test'' x = snd x == 2
+    pairValue = nub (filter test (zip (map fst hand) [countRecursion (map fst hand) x | x <- map fst hand]))
+    check = 2 `elem` nub [countRecursion (map fst hand) x | x <- map fst hand] && 3 `elem` nub [countRecursion (map fst hand) x | x <- map fst hand]
+
+-- | Returns a list of tuples representing the full house sequence if found for a player; kicker function is implied; otherwise returns an empty array.
+ifFullHouse hand1 hand2
+  | (any test2 hand1 && length (evalFullHouseVal hand1) == 2) && (any test2' hand2 && length (evalFullHouseVal hand2) == 2) = map interpretCard (sort (kickerOther hand1 hand2 (filter test2 hand1) (filter test2' hand2)))
+  | any test2 hand1 && length (evalFullHouseVal hand1) == 2 = map interpretCard (sort (filter test2 hand1))
+  | any test2' hand2 && length (evalFullHouseVal hand2) == 2 = map interpretCard (sort (filter test2' hand2))
+  | otherwise = []
+  where
+    test2 x = fst x == head (evalFullHouseVal hand1) || fst x == last (evalFullHouseVal hand1)
+    test2' x = fst x == head (evalFullHouseVal hand2) || fst x == last (evalFullHouseVal hand2)
+
 -- | Returns the list of tuples representing the flush sequence.
 -- A helper function for ifFlush.
 containsFlush hand
@@ -143,22 +180,6 @@ ifFlush hand1 hand2
   | containsFlush hand1 /= [] = map interpretCard (reverse (containsFlush hand1))
   | containsFlush hand2 /= [] = map interpretCard (reverse (containsFlush hand2))
   | otherwise = []
-
-evalFourPairVal hand
-  | pairValue /= [] && snd (head pairValue) == 4 = [fst (head pairValue)]
-  | otherwise = [-1]
-  where
-    test x = snd x == 4
-    pairValue = nub (filter test (zip (map fst hand) [countRecursion (map fst hand) x | x <- map fst hand]))
-
-ifFourOfKind hand1 hand2
-  | (any test2 hand1 && length (evalFourPairVal hand1) == 1) && (any test2' hand2 && length (evalFourPairVal hand2) == 1) = map interpretCard (sort (kickerOther hand1 hand2 (filter test2 hand1) (filter test2' hand2)))
-  | any test2 hand1 && length (evalFourPairVal hand1) == 1 = map interpretCard (sort (filter test2 hand1))
-  | any test2' hand2 && length (evalFourPairVal hand2) == 1 = map interpretCard (sort (filter test2' hand2))
-  | otherwise = []
-  where
-    test2 x = fst x == head (evalFourPairVal hand1)
-    test2' x = fst x == head (evalFourPairVal hand2)
 
 evalThreePairVal hand
   | pairValue /= [] && snd (head pairValue) == 3 = [fst (head pairValue)]
@@ -226,6 +247,7 @@ deal x
   | ifRoyalFlush hand1 hand2 /= [] = ifRoyalFlush hand1 hand2
   | ifStraightFlush hand1 hand2 /= [] = ifStraightFlush hand1 hand2
   | ifFourOfKind hand1 hand2 /= [] = ifFourOfKind hand1 hand2
+  | ifFullHouse hand1 hand2 /= [] = ifFullHouse hand1 hand2
   | ifFlush hand1 hand2 /= [] = ifFlush hand1 hand2
   | ifThreeOfKind hand1 hand2 /= [] = ifThreeOfKind hand1 hand2
   | ifTwoPair hand1 hand2 /= [] = ifTwoPair hand1 hand2
@@ -242,8 +264,8 @@ a x = map reduce ([head x] ++ [x !! 2] ++ drop 4 x)
 b x = map reduce ([x !! 1] ++ [x !! 3] ++ drop 4 x)
 
 {-
-FOURPAIR
-x = [40, 41, 27, 28, 1, 14, 15, 42, 29]
+
+x = [17, 39, 30, 52, 44, 25, 41, 51, 12]
 
 TESTING
 ghci -w simple_tester_haskell.hs

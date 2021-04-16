@@ -204,6 +204,37 @@ testFourOfKind4 =
             (deal [2, 1, 14, 4, 7, 20, 33, 46, 8])
         ]
 
+-- FULL HOUSE PATTERN TESTS --
+testFullHouse =
+  TestLabel "FullHouse --> Hand 1" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "FullHouse: Player 1 should win."
+            ["12C", "12D", "12S", "13H", "13S"]
+            (deal [17, 39, 30, 52, 44, 25, 41, 51, 12]),
+          assertEqual
+            "FullHouse: Player 1 should win."
+            ["6D", "6H", "8D", "8H", "8S"]
+            (deal [16, 31, 26, 32, 19, 21, 22, 34, 47])
+        ]
+
+testFullHouse2 =
+  TestLabel "FullHouse --> Hand 2" $
+    TestList $
+      fmap
+        TestCase
+        [ assertEqual
+            "FullHouse: Player 2 should win."
+            ["12C", "12D", "12S", "13H", "13S"]
+            (deal [39, 17, 52, 30, 44, 25, 41, 51, 12]),
+          assertEqual
+            "FullHouse: Player 2 should win."
+            ["6D", "6H", "8D", "8H", "8S"]
+            (deal [31, 16, 32, 26, 19, 21, 22, 34, 47])
+        ]
+
 -- FLUSH PATTERN TESTS --
 testFlush =
   TestLabel "Flush --> Hand 1" $
@@ -222,10 +253,6 @@ testFlush =
             "Flush: Player 1 should win."
             ["3D", "6D", "8D", "9D", "12D"]
             (deal [16, 31, 29, 32, 19, 21, 22, 34, 25]),
-          assertEqual
-            "Flush: Player 1 should win."
-            ["3D", "6D", "8D", "9D", "13D"]
-            (deal [16, 31, 26, 32, 19, 21, 22, 34, 47]),
           assertEqual
             "Flush: Player 1 should win."
             ["1C", "6C", "8C", "9C", "10C"]
@@ -249,10 +276,6 @@ testFlush2 =
             "Flush: Player 2 should win."
             ["3D", "6D", "8D", "9D", "12D"]
             (deal [31, 16, 32, 29, 19, 21, 22, 34, 25]),
-          assertEqual
-            "Flush: Player 2 should win."
-            ["3D", "6D", "8D", "9D", "13D"]
-            (deal [31, 16, 32, 26, 19, 21, 22, 34, 47]),
           assertEqual
             "Flush: Player 2 should win."
             ["1C", "6C", "8C", "9C", "10C"]
@@ -537,6 +560,8 @@ main =
         testFourOfKind2,
         testFourOfKind3,
         testFourOfKind4,
+        testFullHouse,
+        testFullHouse2,
         testFlush,
         testFlush2,
         testFlush3,

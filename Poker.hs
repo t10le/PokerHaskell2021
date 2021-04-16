@@ -1,4 +1,5 @@
 -- Tommy Le (500793841)
+-- Adam Dowlath (500954115)
 module Poker where
 
 import Data.List
@@ -181,6 +182,16 @@ ifFlush hand1 hand2
   | containsFlush hand2 /= [] = map interpretCard (reverse (containsFlush hand2))
   | otherwise = []
 
+-- | Returns a list of tuples representing the flush sequence if found for a player; kicker function is implied; otherwise returns an empty array.
+ifStraight hand1 hand2
+  | (length (filter test hand1) == 5) && (length (filter test2 hand2) == 5) = map interpretCard (reverse (kickerStraight (filter test hand1) (filter test2 hand2)))
+  | length (filter test hand1) == 5 = map interpretCard (reverse (filter test hand1))
+  | length (filter test2 hand2) == 5 = map interpretCard (reverse (filter test2 hand2))
+  | otherwise = []
+  where
+    test x = fst x `elem` containsStraight hand1
+    test2 x = fst x `elem` containsStraight hand2
+
 evalThreePairVal hand
   | pairValue /= [] && snd (head pairValue) == 3 = [fst (head pairValue)]
   | otherwise = [-1]
@@ -249,6 +260,7 @@ deal x
   | ifFourOfKind hand1 hand2 /= [] = ifFourOfKind hand1 hand2
   | ifFullHouse hand1 hand2 /= [] = ifFullHouse hand1 hand2
   | ifFlush hand1 hand2 /= [] = ifFlush hand1 hand2
+  | ifStraight hand1 hand2 /= [] = ifStraight hand1 hand2
   | ifThreeOfKind hand1 hand2 /= [] = ifThreeOfKind hand1 hand2
   | ifTwoPair hand1 hand2 /= [] = ifTwoPair hand1 hand2
   | ifPair hand1 hand2 /= [] = ifPair hand1 hand2
@@ -265,7 +277,7 @@ b x = map reduce ([x !! 1] ++ [x !! 3] ++ drop 4 x)
 
 {-
 
-x = [17, 39, 30, 52, 44, 25, 41, 51, 12]
+x = [11, 25, 9, 39, 50, 48, 3, 49, 45]
 
 TESTING
 ghci -w simple_tester_haskell.hs
